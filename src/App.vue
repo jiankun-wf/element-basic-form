@@ -1,28 +1,17 @@
 <template>
   <div id="app">
-    <BasicForm @register="register">
-    <template #name="{ model, prop }">
-      <Input v-model="model[prop]"></Input>
-    </template>
-     <template #age="{ model, prop }">
-      <Select v-model="model[prop]">
-          <Option :value="17" label="17"></Option>
-          <Option :value="18" label="18"></Option>
-      </Select>
-     </template>
-    </BasicForm>
+   <BasicForm @register="register"></BasicForm>
   </div>
 </template>
 
 <script>
 import { BasicForm, useForm } from './components/BasicForm'
-import { Select, Option, Input } from 'element-ui';
 const [register, methods] = useForm({
   'label-position': 'right',
   'hide-required-asterisk': false,
   'label-suffix': '：',
   'label-width': 'auto',
-  size: 'small',
+  size: 'mini',
   fields: [
     {  
       prop: 'name',
@@ -41,19 +30,22 @@ const [register, methods] = useForm({
       ifShow: ({ model }) => {
         return model.age >= 18
       }, 
+      show: () => true,
       rules: [{ required: true, message: '请输姓名', trigger: 'blur' }],
-      size: 'small',
       error: undefined,
       required: false,
       ['inline-message']: false,
       ['show-message']: true,
-
     },
     {  
       prop: 'age',
       label: '年龄', 
-      component: 'Input',
+      component: 'Select',
       componentProps: {
+        options: [
+          { label: '17', value: 17 },
+          { label: '18', value: 18 }
+        ],
         placeholder: '请选择年龄',
         onChange({ value, action, model }){
           console.log(value, 'on-change');
@@ -64,7 +56,6 @@ const [register, methods] = useForm({
       defaultValue: 17,
       colProps: { span: 12 }, 
       rules: [{ required: true, message: '请选择年龄', trigger: 'blur' }],
-      size: 'small',
       error: undefined,
       required: false,
       ['inline-message']: false,
@@ -83,9 +74,6 @@ export default {
   },  
   components: {
     BasicForm,
-    Select,
-    Option,
-    Input
   },
   methods: {
     inputChange() {
@@ -93,15 +81,14 @@ export default {
     }
   },
   async mounted() {
-  //  await this.methods.setFieldsValue({ name: '111' });
 
    const values = this.methods.getFieldsValue();
    console.log(values);
 
-  //  setTimeout( async () => {
-  //    const res = await this.methods.validate();
-  //    console.log(res);
-  //  }, 2000)
+   setTimeout( async () => {
+     const res = await this.methods.validate();
+     console.log(res);
+   }, 2000)
   }
 }
 </script>

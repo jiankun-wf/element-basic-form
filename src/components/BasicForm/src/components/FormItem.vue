@@ -7,7 +7,6 @@
           :is="componentMap[field.component]"
           v-bind="getComponentProps"
           v-model="formModel[field.prop]"
-          @change="fieldChange"
           @input="fieldChange"
         ></component>
       </slot>
