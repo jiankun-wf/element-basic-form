@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <BasicForm @register="register">
+    <template #name="{ model, prop }">
+      <Input v-model="model[prop]"></Input>
+    </template>
      <template #age="{ model, prop }">
       <Select v-model="model[prop]">
           <Option :value="17" label="17"></Option>
@@ -13,7 +16,7 @@
 
 <script>
 import { BasicForm, useForm } from './components/BasicForm'
-import { Select, Option } from 'element-ui';
+import { Select, Option, Input } from 'element-ui';
 const [register, methods] = useForm({
   'label-position': 'right',
   'hide-required-asterisk': false,
@@ -82,6 +85,7 @@ export default {
     BasicForm,
     Select,
     Option,
+    Input
   },
   methods: {
     inputChange() {
