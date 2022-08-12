@@ -25,11 +25,11 @@ const [register, methods] = useForm({
           console.log(model, 'on-change-model')
         }
       },
-      defaultValue: '', 
+      defaultValue: '青年', 
       colProps: { span: 12 }, 
-      ifShow: ({ model }) => {
-        return model.age >= 18
-      }, 
+      // ifShow: ({ model }) => {
+      //   return model.age >= 18
+      // }, 
       show: () => true,
       rules: [{ required: true, message: '请输姓名', trigger: 'blur' }],
       error: undefined,
@@ -39,18 +39,37 @@ const [register, methods] = useForm({
     },
     {  
       prop: 'age',
-      label: '年龄', 
-      component: 'Select',
+      label: '年龄段', 
+      component: 'Slider',
       componentProps: {
         options: [
           { label: '17', value: 17 },
           { label: '18', value: 18 }
         ],
         placeholder: '请选择年龄',
-        onChange({ value, action, model }){
-          console.log(value, 'on-change');
-          console.log(action, 'on-change-action');
-          console.log(model, 'on-change-model')
+        onChange({ value, action }){
+          const { setFieldsValue } = action
+          let age = ''
+          if(value <= 10 ) {
+            age = '少年' 
+          } else if(value <= 17) {
+            age = '青少年'
+          } else if(value <= 24) {
+            age = '青年'
+          } else if(value <= 35) {
+            age = '而立'
+          } else if(value <= 45) {
+            age = '不惑'
+          } else if(value <= 55) {
+            age = '知天命'
+          } else if(value <= 65) {
+            age = '耳顺'
+          } else if(value <= 75) {
+            age = '花甲'
+          } else if(value <= 85) {
+            return '古稀'
+          }
+          setFieldsValue({ name: age });
         }
       },
       defaultValue: 17,

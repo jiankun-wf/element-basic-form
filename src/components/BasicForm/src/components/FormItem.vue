@@ -7,7 +7,6 @@
           :is="componentMap[field.component]"
           v-bind="getComponentProps"
           v-model="formModel[field.prop]"
-          @input="fieldChange"
         ></component>
       </slot>
     </FormItem>
@@ -51,6 +50,9 @@
       Col
     },
     computed: {
+      value() {
+        return this.formModel[this.field.prop]
+      },
       getFormItemProps() {
         return { ...this.field, ifShow: undefined, show: undefined, componentProps: undefined }  
       },
@@ -83,6 +85,11 @@
         return useComponentMap();  
       }
     },
+    watch: {
+     value(val) {
+      this.fieldChange(val)
+     }
+    },
     methods: {
         fieldChange(val) {
           const { prop } = this.field
@@ -90,7 +97,8 @@
           // this.setValue?.(prop, val) 
 
           this.getComponentProps.onChange?.({ value: val, action: this.action, model: this.formModel, prop })
-        }
+          
+      }
     }
   }
 </script>
