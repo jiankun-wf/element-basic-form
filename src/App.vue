@@ -15,17 +15,16 @@ const thirdProps = { lg: 8, xs: 24, sm: 24, xl: 8, xxl: 8, span: 8 };
 const [register, methods] = useForm({
   "label-position": "right",
   "hide-required-asterisk": false,
-  "label-suffix": "：",
+  "label-suffix": "",
   "label-width": "auto",
-  rowProps: { gutter: "20" },
-  size: "mini",
+  rowProps: { gutter: 20 },
+  size: "small",
   fields: [
     {
       prop: "name",
       label: "姓名",
       component: "Input",
       componentProps: {
-        placeholder: "请输入姓名",
         onChange({ value, action, model }) {
           console.log(value, "on-change");
           console.log(action, "on-change-action");
@@ -120,11 +119,31 @@ export default {
     },
   },
   async mounted() {
-    const values = this.methods.getFieldsValue();
-    console.log(values);
 
     setTimeout(async () => {
-      // const res = await this.methods.validate();
+      this.methods.updateField([{
+        prop: 'name',
+        ifShow: ({ model }) => {
+          console.log(model);
+          return true
+        },
+        componentProps: {
+          placeholder: '这是改过后的值'
+        }
+      }, {
+        prop: 'age',
+        componentProps: {
+          options: [          
+            { label: '20', value: 20 },
+            { label: "30", value: 30 },
+            { label: "40", value: 40 },
+            { label: "50", value: 50 },
+            { label: "60", value: 60 },
+            { label: "70", value: 70 },
+            { label: "80", value: 80 }
+          ]
+        }
+      }])
       // console.log(res);
     }, 2000);
   },
