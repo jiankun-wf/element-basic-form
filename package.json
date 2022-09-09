@@ -9,6 +9,7 @@
     "dev": "yarn serve"
   },
   "dependencies": {
+    "ckeditor4-vue": "^2.1.1",
     "core-js": "^3.8.3",
     "vue": "^2.6.14"
   },

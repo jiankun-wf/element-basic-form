@@ -1,5 +1,5 @@
 <template>
-    <Select v-bind="$attrs" @change="onChange" v-model="modelValue">
+    <el-select v-bind="$attrs" @change="onChange" v-model="modelValue" style="width: 100%">
       <template v-if="getIsGroup">
         <OptionGroup 
           v-for="(group, index) in options"
@@ -23,16 +23,16 @@
            :value="item[valueField]">
         </Option> 
       </template>
-    </Select>
+    </el-select>
 </template>
 <script lang='ts'>
-  import { Select, Option, OptionGroup } from "element-ui";
+  import { Select as ElSelect, Option, OptionGroup } from "element-ui";
   import { useType } from "../hooks/useType";
   const { is } = useType();
   export default {
     name: 'BasicSelect',
     components: {
-       Select,
+       ElSelect,
        Option,
        OptionGroup,
     },

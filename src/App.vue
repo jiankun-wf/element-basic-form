@@ -10,7 +10,7 @@
 import { BasicForm, useForm } from "./components/BasicForm";
 // const rowProps = { span: 24, lg: 24, sm: 24, xl: 24, xxl: 24 };
 // const halfProps = { md: 24, lg: 12 };
-const thirdProps = { lg: 8, xs: 24, sm: 24, xl: 8, xxl: 8, span: 8 };
+const thirdProps = { lg: 8, xs: 24, sm: 24, md: 12, xl: 6 };
 
 const [register, methods] = useForm({
   "label-position": "right",
@@ -25,10 +25,11 @@ const [register, methods] = useForm({
       label: "姓名",
       component: "Input",
       componentProps: {
-        onChange({ value, action, model }) {
+        onChange({ value, action, model, prop }) {
           console.log(value, "on-change");
           console.log(action, "on-change-action");
           console.log(model, "on-change-model");
+          console.log(prop, "on-change-prop");
         },
       },
       defaultValue: "",
@@ -49,8 +50,6 @@ const [register, methods] = useForm({
       component: "Select",
       componentProps: {
         options: [
-          { label: '15', value: 15 },
-          { label: '20', value: 20 },
           { label: "30", value: 30 },
           { label: "40", value: 40 },
           { label: "50", value: 50 },
@@ -63,30 +62,33 @@ const [register, methods] = useForm({
           const { setFieldsValue } = action;
           let name = ''
           switch(value) {
-            case 15: 
-              name = '至于学'
-              break;
             case 20: 
-              name = '少年' 
+              name = '弱冠之年' 
               break;
             case 30:
-              name = '而立'
+              name = '而立之年'
               break;
             case 40: 
-              name = '不惑'
+              name = '不惑之年'
               break;
             case 50: 
-              name = '知天命'
+              name = '大衍之年'
               break; 
             case 60: 
-              name = '耳顺'
+              name = '花甲之年'
               break;
             case 70:
-              name = '花甲'
+              name = '古稀之年'
               break;
             case 80:
-              name = '古稀'
+              name = '耄耋之年'
               break;
+            case 90:
+              name = '鲐背之年';
+              break;
+            case 100:
+              name = '期颐之年';
+              break;    
             default: break;
           }
           setFieldsValue({ name });
@@ -121,29 +123,21 @@ export default {
   async mounted() {
 
     setTimeout(async () => {
-      this.methods.updateField([{
-        prop: 'name',
-        ifShow: ({ model }) => {
-          console.log(model);
-          return true
-        },
-        componentProps: {
-          placeholder: '这是改过后的值'
-        }
-      }, {
+      this.methods.updateField({
         prop: 'age',
         componentProps: {
           options: [          
-            { label: '20', value: 20 },
             { label: "30", value: 30 },
             { label: "40", value: 40 },
             { label: "50", value: 50 },
             { label: "60", value: 60 },
             { label: "70", value: 70 },
-            { label: "80", value: 80 }
+            { label: "80", value: 80 },
+            { label: '90', value: 90 },
+            { label: '100', value: 100 },  
           ]
         }
-      }])
+      })
       // console.log(res);
     }, 2000);
   },

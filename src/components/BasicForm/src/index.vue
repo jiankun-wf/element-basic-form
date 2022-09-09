@@ -8,21 +8,20 @@
     >
       <Row v-bind="getRowProperties">
         <slot name="header"></slot>
-        <template v-for="item in getFormFields" >
           <BasicFormItem
+            v-for="item in getFormFields"
             :class="getClass.ci()"
-            :key="item.prop" 
-            :field="item" 
-            :action="getFormAction" 
-            :form-props="props" 
+            :key="item.prop"
+            :field="item"
+            :action="getFormAction"
+            :form-props="props"
             :form-model="modelValue"
             :set-value="setFormModel"
           >
-           <template #[item.prop]="data">
-             <slot :name="item.prop" v-bind="data || {}"></slot>
-           </template>
+            <template #[item.prop]="data">
+              <slot :name="item.prop" v-bind="data || {}"></slot>
+            </template>
           </BasicFormItem>
-        </template>
       </Row>
     </Form>
   </div>
@@ -30,8 +29,8 @@
 <script>
 import { useClassSpace } from "./hooks/useClass";
 import { Form, Row } from "element-ui";
-import { useFormValues } from './hooks/useFormValues';
-import BasicFormItem from './components/FormItem.vue';
+import { useFormValues } from "./hooks/useFormValues";
+import BasicFormItem from "./components/FormItem.vue";
 import { useType } from "./hooks/useType";
 const { is } = useType();
 const classes = useClassSpace("basic-form");
@@ -39,7 +38,6 @@ export default {
   name: "BasicForm",
   data() {
     return {
-
       modelValue: {
         name: "123",
       },
@@ -51,53 +49,58 @@ export default {
   },
   computed: {
     getRowProperties() {
-        const { rowProps = {}, rowStyle = {} } = this.props;
-        return {
-           style: rowStyle,
-           ...rowProps, 
-        }
+      const { rowProps = {}, rowStyle = {} } = this.props;
+      return {
+        style: rowStyle,
+        ...rowProps,
+      };
     },
     getFormFields() {
-       return this.props.fields ?? [] 
+      return this.props.fields ?? [];
     },
     getFormAction() {
-       return {
-         validate: this.validate.bind(this),
-         setProps: this.setProps.bind(this),
-         getFieldsValue: this.getValues.bind(this),
-         setFieldsValue: this.setFieldsValue.bind(this),
-       }
+      return {
+        validate: this.validate.bind(this),
+        validateField: this.validateField.bind(this),
+        setProps: this.setProps.bind(this),
+        getFieldsValue: this.getValues.bind(this),
+        initValues: this.initDefault.bind(this),
+        setFieldsValue: this.setFieldsValue.bind(this),
+        resetFields: this.resetFields.bind(this),
+        clearValidate: this.clearValidate.bind(this),
+        updateField: this.updateField.bind(this),
+      };
     },
     getClass() {
-        return classes;
-    }
-  },  
+      return classes;
+    },
+  },
   methods: {
     setFormModel(field, val) {
       this.modelValue[field] = val;
     },
     setFieldsValue(values = {}) {
-      Object.keys(values).forEach(key => {
-        if(!is.def(this.modelValue)) {
+      Object.keys(values).forEach((key) => {
+        if (!is.def(this.modelValue)) {
           this.$set(this.modelValue, key, values[key]);
-          return
+          return;
         }
-        this.modelValue[key] = values[key]
-      })
+        this.modelValue[key] = values[key];
+      });
     },
-    validateField(namePath = '', callback) {
-      if(callback && is.function(callback)) {
-        this.$refs.basicForm.validateField(namePath, callback);     
-      } else { 
+    validateField(namePath = "", callback) {
+      if (callback && is.function(callback)) {
+        this.$refs.basicForm.validateField(namePath, callback);
+      } else {
         return this.$refs.basicForm.validateField(namePath);
       }
-    }, 
+    },
     resetFields() {
-       this.$refs.basicForm.resetFields();
-    },  
+      this.$refs.basicForm.resetFields();
+    },
     clearValidate(namePath) {
-       this.$refs.basicForm.clearValidate(namePath); 
-    }, 
+      this.$refs.basicForm.clearValidate(namePath);
+    },
     validate() {
       return this.$refs.basicForm?.validate();
     },
@@ -112,42 +115,54 @@ export default {
       return this.modelValue;
     },
     updateField(field) {
-      if(!field && !is.array(field) && !is.object(field)) {
-        throw 'updateField must be a Array or Object'
+      if (!field && !is.array(field) && !is.object(field)) {
+        throw "updateField must be a Array or Object";
       }
-      if(is.array(field)) {
+      if (is.array(field)) {
         field.forEach((item = {}) => {
-          const originField = this.getFormFields.find(f => f.prop === item.prop)
-          Object.keys(item).forEach(key => {
-            if(key === 'componentProps') {
-              if(!originField['componentProps']) {
-                this.$set(originField, key, item[key])
-              } else Object.assign(originField['componentProps'], item['componentProps'])
+          const originField = this.getFormFields.find(
+            (f) => f.prop === item.prop
+          );
+          Object.keys(item).forEach((key) => {
+            if (key === "componentProps") {
+              if (!originField["componentProps"]) {
+                this.$set(originField, key, item[key]);
+              } else
+                Object.assign(
+                  originField["componentProps"],
+                  item["componentProps"]
+                );
             } else {
-              this.$set(originField, key, item[key])
+              this.$set(originField, key, item[key]);
             }
-          })
-        }) 
+          });
+        });
       } else {
-          const originField = this.getFormFields.find(f => f.prop === field.prop)
-          Object.keys(field).forEach(key => {
-            if(key === 'componentProps') {
-              if(!originField['componentProps']) {
-                this.$set(originField, key, field[key])
-              } else Object.assign(originField['componentProps'], field['componentProps'])
-            } else {
-              this.$set(originField, key, field[key])
-            }
-          })
+        const originField = this.getFormFields.find(
+          (f) => f.prop === field.prop
+        );
+        Object.keys(field).forEach((key) => {
+          if (key === "componentProps") {
+            if (!originField["componentProps"]) {
+              this.$set(originField, key, field[key]);
+            } else
+              Object.assign(
+                originField["componentProps"],
+                field["componentProps"]
+              );
+          } else {
+            this.$set(originField, key, field[key]);
+          }
+        });
       }
     },
-    initDefault () {
+    initDefault() {
       const { fields } = this.props;
 
-      const { initDefaultValue } = useFormValues(this.modelValue, fields)
+      const { initDefaultValue } = useFormValues(this.modelValue, fields);
 
       initDefaultValue();
-    }
+    },
   },
   mounted() {
     this.$emit("register", {
