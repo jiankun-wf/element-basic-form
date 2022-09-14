@@ -23,29 +23,28 @@
           const iframe = iframeWrap.querySelector('iframe')
           if(!iframe) {
             this.$nextTick(() => {
-              setTimeout(() => { this.getEditorWrap(callback) }, 100)
+              setTimeout(() => { this.getEditorBody(callback) }, 100)
             });
           } else callback && callback(iframe.contentWindow.document.body)
         },
         // 监听变化 事件
         editorReady(Editor) {
+          // Editor.execCommand('pagebreak');
           Editor.on('change', () => {
-            console.log(Editor.execCommand('pagebreakCmd', Editor));
-            // console.log(this.editorData);
-             console.log(Editor);
-            // this.computedPageBreak(Editor);
+            this.computedPageBreak(Editor);
           })
         },
         // 计算分页
         computedPageBreak(Editor) {
-            console.log(Editor);
            this.getEditorBody((context) => {
               const innerHeight = context.scrollHeight;
               // 小于一页    
               if(innerHeight < this.pageBreakHeight) {
+                console.log(Editor, '1');
+                this.editorData.length === 9 && Editor.execCommand('pagebreak');
                 return;
               } else {
-                const pages = Math.floor(innerHeight / this.pageBreakHeight);
+                const pages = Math.ceil(innerHeight / this.pageBreakHeight);
                 console.log(pages);
               }
            })
@@ -56,5 +55,8 @@
 
 
 <style lang='less' scoped>
-
+ #app {
+   width: 50%;
+   margin: 60px auto;
+ }
 </style>
